@@ -2,27 +2,41 @@ package com.steps.hoguking.domain;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 @Service
 public class MemberService {
+	private String collectionName = "MEMBER";
+
 	@Autowired
-	private Firestore firestore;
+	private Firestore fireStore;
 
-	public Member getMember(Member member) throws ExecutionException, InterruptedException {
-		CollectionReference docRef = firestore.collection("MEMBER");
-		Query query = docRef.whereEqualTo("id", member.getId());
+	@SneakyThrows
+	public Member getMember(String id) {
+		Query query = getMemberCollection().whereEqualTo("id", id);
 		ApiFuture<QuerySnapshot> future = query.get();
-		QuerySnapshot snapShot = future.get();
-		List<QueryDocumentSnapshot> documents = snapShot.getDocuments();
+		QuerySnapshot querySnapshot = future.get();
 
-		QueryDocumentSnapshot document = documents.get(0);
-		return new Member().setName(document.getString("name"))
-				.setId(document.getString("id"))
-				.setDocumentId(document.getId());
+		if (querySnapshot.isEmpty()) {
+			return null;
+		} else {
+			return querySnapshot.getDocuments().get(0).toObject(Member.class);
+		}
+	}
+
+	private CollectionReference getMemberCollection() {
+		return fireStore.collection(collectionName);
+	}
+
+	@SneakyThrows
+	public void signUp(Member member) {
+		if (getMember(member.getId()) != null) {
+			throw new RuntimeException("duplicated id");
+		}
+
+		ApiFuture<DocumentReference> result = getMemberCollection().add(member);
+		result.get();
 	}
 }
