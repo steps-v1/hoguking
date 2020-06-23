@@ -1,33 +1,31 @@
 package com.steps.hoguking.domain;
 
-import com.google.cloud.firestore.Firestore;
+import com.steps.hoguking.infrastructure.repository.MemberRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class MemberService extends FireStoreService {
+import javax.transaction.Transactional;
 
+@Service
+public class MemberService {
 	@Autowired
-	private Firestore fireStore;
+	private MemberRepository memberRepository;
+
 
 	@SneakyThrows
 	public Member getMember(String id) {
-		return findOne("id", id, Member.class);
+		return memberRepository.getOne(id);
 	}
 
 
 	@SneakyThrows
+	@Transactional
 	public void signUp(Member member) {
 		if (getMember(member.getId()) != null) {
 			throw new RuntimeException("duplicated id");
 		}
 
-		save(member);
-	}
-
-	@Override
-	public String getCollectionName() {
-		return "MEMBER";
+		memberRepository.save(member);
 	}
 }

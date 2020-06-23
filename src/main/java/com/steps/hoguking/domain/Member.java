@@ -3,17 +3,16 @@ package com.steps.hoguking.domain;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Data
 @Accessors(chain = true)
+@Entity(name = "member")
 public class Member {
-	@NotBlank
+	@Id
 	private String id;
-	@NotBlank
 	private String name;
-	@NotBlank
 	private String alias;
-	@NotBlank
 	private String password;
 }

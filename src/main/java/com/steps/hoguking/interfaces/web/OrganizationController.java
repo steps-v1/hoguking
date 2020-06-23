@@ -1,13 +1,16 @@
 package com.steps.hoguking.interfaces.web;
 
 import com.steps.hoguking.domain.*;
-import com.steps.hoguking.interfaces.web.protocol.*;
-import com.steps.hoguking.support.util.ModelConverter;
+import com.steps.hoguking.interfaces.web.protocol.OrganizationMemberRequest;
+import com.steps.hoguking.interfaces.web.protocol.OrganizationRequest;
+import com.steps.hoguking.interfaces.web.protocol.OrganizationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static com.steps.hoguking.support.util.ModelConverter.convert;
 
@@ -39,12 +42,5 @@ public class OrganizationController {
 				organizationId,
 				request.getMemberId());
 
-	}
-
-	@GetMapping("/hoguking/v1.0/organizations/{id}/hogus")
-	public HoguResponse findHogus(@PathVariable("id") String organizationId, int year, int month) {
-		List<Hogu> hoguList = playService.getHoguList(organizationId, year, month);
-
-		return new HoguResponse().setHogus(ModelConverter.convertHoguList(hoguList, HoguProtocol.class));
 	}
 }

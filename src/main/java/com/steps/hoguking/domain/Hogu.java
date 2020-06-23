@@ -12,6 +12,4 @@ import lombok.NoArgsConstructor;
 public class Hogu {
 	private String hoguKingId;
 	private Long count;
-
-
 }

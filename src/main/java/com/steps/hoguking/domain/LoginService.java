@@ -1,20 +1,25 @@
 package com.steps.hoguking.domain;
 
+import com.steps.hoguking.infrastructure.repository.TokenRepository;
 import com.steps.hoguking.support.util.DateUtils;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Service
-public class LoginService extends FireStoreService {
+public class LoginService {
 
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private TokenRepository tokenRepository;
 
 
+	@Transactional
 	public Token login(String id, String password) {
 		Member member = memberService.getMember(id);
 		if (member == null) {
@@ -31,7 +36,7 @@ public class LoginService extends FireStoreService {
 		token.setToken("HK-" + UUID.randomUUID().toString());
 		token.setExpire(DateUtils.plusMonth(3));
 
-		save(token);
+		tokenRepository.save(token);
 
 		return token;
 	}
@@ -39,12 +44,6 @@ public class LoginService extends FireStoreService {
 
 	@SneakyThrows
 	public Token getToken(String token) {
-		return findOne("token", token, Token.class);
-	}
-
-
-	@Override
-	public String getCollectionName() {
-		return "TOKEN";
+		return tokenRepository.getOne(token);
 	}
 }
