@@ -35,5 +35,7 @@ spring:
 
 ---
 spring:
-  profile: real
+  profiles: real
 
+  datasource:
+    url: jdbc:mysql://e5f35db8-0cf0-409f-9ed4-7a43e741427e.private.rds.cloud.toast.com:11306/hoguking?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
