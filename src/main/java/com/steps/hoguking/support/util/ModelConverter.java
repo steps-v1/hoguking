@@ -1,24 +1,18 @@
 package com.steps.hoguking.support.util;
 
-import com.steps.hoguking.domain.*;
+import com.steps.hoguking.domain.Hogu;
+import com.steps.hoguking.domain.Member;
+import com.steps.hoguking.domain.Organization;
+import com.steps.hoguking.domain.Play;
 import com.steps.hoguking.interfaces.web.protocol.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
 public class ModelConverter {
 	public static Member convert(MemberProtocol memberProtocol, Class<Member> memberClass) {
-		Member member = ModelUtils.convertValue(memberProtocol, memberClass);
-
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		member.setPassword(bCryptPasswordEncoder.encode(memberProtocol.getPassword()));
-
-		return member;
+		return ModelUtils.convertValue(memberProtocol, memberClass);
 	}
 
-	public static TokenProtocol convert(Token token, Class<TokenProtocol> hogukingTokenClass) {
-		return ModelUtils.convertValue(token, hogukingTokenClass);
-	}
 
 	public static Organization convert(OrganizationRequest request, Class<Organization> organizationClass) {
 		return ModelUtils.convertValue(request, organizationClass);

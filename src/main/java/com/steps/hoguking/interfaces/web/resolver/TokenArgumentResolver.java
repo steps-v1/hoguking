@@ -1,6 +1,6 @@
 package com.steps.hoguking.interfaces.web.resolver;
 
-import com.steps.hoguking.domain.Token;
+import com.steps.hoguking.domain.Member;
 import com.steps.hoguking.interfaces.web.filter.AuthFilter;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
 	@Override
 	public boolean supportsParameter(MethodParameter methodParameter) {
-		return methodParameter.getParameterType().isAssignableFrom(Token.class);
+		return methodParameter.getParameterType().isAssignableFrom(Member.class);
 	}
 
 	@Override

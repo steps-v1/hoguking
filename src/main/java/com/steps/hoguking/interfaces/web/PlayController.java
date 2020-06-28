@@ -1,8 +1,8 @@
 package com.steps.hoguking.interfaces.web;
 
+import com.steps.hoguking.domain.Member;
 import com.steps.hoguking.domain.Play;
 import com.steps.hoguking.domain.PlayService;
-import com.steps.hoguking.domain.Token;
 import com.steps.hoguking.interfaces.web.protocol.PlayListResponse;
 import com.steps.hoguking.interfaces.web.protocol.PlayProtocol;
 import com.steps.hoguking.interfaces.web.protocol.PlayRequest;
@@ -29,8 +29,8 @@ public class PlayController {
 	}
 
 	@GetMapping("/hoguking/v1.0/plays")
-	public PlayListResponse play(Token token, int limit, int offset) {
-		List<Play> plays = playService.getPlayList(token.getMemberId(), limit, offset);
+	public PlayListResponse play(Member member, int limit, int offset) {
+		List<Play> plays = playService.getPlayList(member.getId(), limit, offset);
 
 		return new PlayListResponse().setPlays(ModelConverter.convert(plays, PlayProtocol.class));
 	}

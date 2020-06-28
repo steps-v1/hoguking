@@ -1,19 +1,24 @@
 package com.steps.hoguking.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.Date;
 
 @Data
 @Accessors(chain = true)
+@Entity(name = "member")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
-	@NotBlank
+	@Id
 	private String id;
-	@NotBlank
-	private String name;
-	@NotBlank
-	private String alias;
-	@NotBlank
-	private String password;
+	private Date regDateTime;
+	private Date modDateTime;
 }

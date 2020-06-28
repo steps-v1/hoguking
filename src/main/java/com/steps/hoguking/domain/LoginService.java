@@ -1,50 +1,61 @@
 package com.steps.hoguking.domain;
 
-import com.steps.hoguking.support.util.DateUtils;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import javax.annotation.PostConstruct;
+import java.util.Date;
 
+@Slf4j
 @Service
-public class LoginService extends FireStoreService {
+public class LoginService {
 
 	@Autowired
 	private MemberService memberService;
 
+	@SneakyThrows
+	@PostConstruct
+	public void post() {
+		FirebaseOptions options = new FirebaseOptions.Builder()
+				.setCredentials(GoogleCredentials.getApplicationDefault())
+				.setDatabaseUrl("https://hoguking-d5555.firebaseio.com")
+				.build();
 
-	public Token login(String id, String password) {
-		Member member = memberService.getMember(id);
-		if (member == null) {
-			throw new RuntimeException("가입된 회원이 아님.");
-		}
-
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		if (bCryptPasswordEncoder.matches(password, member.getPassword()) != false) {
-			throw new RuntimeException("비밀번호 틀림");
-		}
-
-		Token token = new Token();
-		token.setMemberId(id);
-		token.setToken("HK-" + UUID.randomUUID().toString());
-		token.setExpire(DateUtils.plusMonth(3));
-
-		save(token);
-
-		return token;
+		FirebaseApp.initializeApp(options);
 	}
-
 
 	@SneakyThrows
-	public Token getToken(String token) {
-		return findOne("token", token, Token.class);
-	}
+	public Member getMember(String idTokenString) {
+		log.info("check Token {}", idTokenString);
 
+		FirebaseToken decodedToken = FirebaseAuth.getInstance()
+				.verifyIdToken(idTokenString);
 
-	@Override
-	public String getCollectionName() {
-		return "TOKEN";
+		if (decodedToken != null) {
+			String userId = decodedToken.getUid();
+			log.info("login userId {}", userId);
+
+			// Get profile information from payload
+			String email = decodedToken.getEmail();
+			log.info("login email {}", email);
+
+			Member member = memberService.getMember(email);
+			if (member == null) {
+				memberService.signUp(Member.builder()
+						.id(email)
+						.regDateTime(new Date())
+						.build());
+			}
+			return memberService.getMember(email);
+		} else {
+			throw new RuntimeException("oauth fail");
+		}
 	}
 }
