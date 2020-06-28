@@ -32,6 +32,13 @@ spring:
 spring:
   profiles: dev
 
+---
+spring:
+  profiles: local
+
+  datasource:
+    url: jdbc:mysql://localhost:1306/hoguking?socket=/tmp/mysql.sock&serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+
 
 ---
 spring:

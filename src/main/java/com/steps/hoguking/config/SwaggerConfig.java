@@ -1,6 +1,6 @@
 package com.steps.hoguking.config;
 
-import com.steps.hoguking.domain.Token;
+import com.steps.hoguking.domain.Member;
 import com.steps.hoguking.interfaces.web.filter.AuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +35,7 @@ public class SwaggerConfig {
 				.apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.any())
 				.build()
-				.ignoredParameterTypes(Token.class)
+				.ignoredParameterTypes(Member.class)
 				.globalOperationParameters(aParameters);
 	}
 }

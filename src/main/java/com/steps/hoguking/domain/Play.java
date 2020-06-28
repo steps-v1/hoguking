@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,8 +18,12 @@ import java.util.Date;
 public class Play {
 	@Id
 	private String playId;
-	private String organizationId;
-	private String hoguKingId;
 	private String playName;
 	private Date playDateTime;
+
+	@OneToOne
+	private Member hoguking;
+
+	@OneToMany
+	private List<Member> players;
 }
